@@ -1,0 +1,62 @@
+--- origsrc/listen-0.6.5/Makefile	2010-03-08 07:04:54.000000000 -0600
++++ src/listen-0.6.5/Makefile	2011-01-24 23:37:07.561324700 -0600
+@@ -30,7 +30,7 @@ PYSRC_DIR = $(shell find src -type d -no
+ 
+ PO = $(shell find ./po -name *.po -print | sed -e 's!.po!!g')
+ 
+-all: check mmkeys.so po-data
++all: check mmkeys.dll po-data
+ 
+ 	echo "#!/bin/sh" > listen
+ 	cat header.tmpl >> listen
+@@ -66,9 +66,9 @@ check:
+ 		$(PYTHON) ./check.py; \
+ 	fi
+ 
+-mmkeys.so:
++mmkeys.dll:
+ 	${MAKE} -C mmkeys
+-	cp mmkeys/mmkeys.so src/mmkeys.so
++	cp mmkeys/mmkeys.dll src/mmkeys.dll
+ 
+ clean: po-clean	
+ 	rm -rf build
+@@ -78,7 +78,7 @@ clean: po-clean
+ 	rm -f listen org.gnome.Listen.service
+ 	find . -type f -name '*.pyc'  -print | xargs rm -rf
+ 	find . -type f -name '*.pyo'  -print | xargs rm -rf
+-	rm -f src/*.so
++	rm -f src/*.dll
+ 	${MAKE} -C mmkeys clean
+ 
+ dist-clean: clean 
+@@ -112,7 +112,7 @@ install: make-install-dirs
+ 			install -m 644 $${file}* $(DESTDIR)$(LIBDIR)/listen/$${dir}/ ; \
+ 		done ; \
+ 	done
+-	install -m 644 src/mmkeys.so $(DESTDIR)$(LIBDIR)/listen/
++	install -m 755 src/mmkeys.dll $(DESTDIR)$(LIBDIR)/listen/
+ 	install -m 644 src/listen $(DESTDIR)$(LIBDIR)/listen/
+ 	install -m 644 data/*.glade $(DESTDIR)$(DATADIR)/listen
+ 	install -m 644 data/jamendo_logo*.png $(DESTDIR)$(DATADIR)/listen
+--- origsrc/listen-0.6.5/mmkeys/Makefile	2010-03-08 07:04:54.000000000 -0600
++++ src/listen-0.6.5/mmkeys/Makefile	2011-01-24 23:37:30.571364800 -0600
+@@ -1,7 +1,7 @@
+ # Copyright 2004 Joe Wreschnig. Released under the terms of the GNU GPL.
+ 
+-mmkeys.so: build
+-	cp build/lib*/mmkeys.so .
++mmkeys.dll: build
++	cp build/lib*/mmkeys.dll .
+ 
+ build: mmkeyspy.c
+ 	./setup.py build
+@@ -17,7 +17,7 @@ mmkeyspy.c: mmkeys.defs mmkeys.override
+ 	mv gen-tmp $@
+ 
+ clean:
+-	rm -f mmkeys.so *.o mmkeyspy.c
++	rm -f mmkeys.dll *.o mmkeyspy.c
+ 	rm -rf build dist
+ 
+ distclean: clean

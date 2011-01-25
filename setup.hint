@@ -1,0 +1,7 @@
+category: Audio
+requires: python python-daap python-dbus python-gnomevfs python-gst0.10 python-gtk2.0 python-musicbrainz2 python-mutagen python-tunepimp python-webkit python-xdg python-xlib
+sdesc: "GNOME audio player"
+ldesc: "Listen is an audio player written in Python. Thanks to it, you 
+can easily organize your music collections. It supports many features 
+such as Podcasts management, browse Shoutcast directory. It provides a 
+direct access to lyrics, lastfm and wikipedia informations."

@@ -1,0 +1,70 @@
+FileMonitor depends on pyinotify, which is Linux-specific
+
+--- origsrc/listen-0.6.5/src/listen	2010-03-08 07:04:54.000000000 -0600
++++ src/listen-0.6.5/src/listen	2011-01-24 23:57:23.411844700 -0600
+@@ -84,7 +84,6 @@ PIDFILE = get_xdg_cache_file("listen.pid
+ from library import ListenDB
+ from plugins.generic import GenericManager
+ from player import Player
+-from vfs import FileMonitor
+ from config import config
+ from widget.listen import Listen
+ from option_parser import ListenOptionParser
+@@ -167,7 +166,6 @@ class ListenApp(object):
+     def idle_post_start(self):
+         GenericManager()
+         self.listen_instance.source_ui.load()
+-        FileMonitor.start()
+ 
+     def listen_is_alive(self):
+         try:
+--- origsrc/listen-0.6.5/src/vfs/__init__.py	2010-03-08 07:04:54.000000000 -0600
++++ src/listen-0.6.5/src/vfs/__init__.py	2011-01-24 23:57:15.409030700 -0600
+@@ -21,6 +21,5 @@
+ ###
+ 
+ 
+-from vfs.monitor import FileMonitor
+ from vfs.vfsutils import *
+ 
+--- origsrc/listen-0.6.5/src/widget/listen.py	2010-03-08 07:04:54.000000000 -0600
++++ src/listen-0.6.5/src/widget/listen.py	2011-01-24 23:56:37.282564200 -0600
+@@ -46,7 +46,7 @@ from widget.menubar import ListenMenuBar
+ from widget.smart_playlist import SmartPlaylistWindow
+ 
+ from xdg_support import get_xdg_pixmap_file
+-from vfs import FileMonitor, async_parse_uris
++from vfs import async_parse_uris
+ from helper import Dispatcher
+ from mmkeys_wrap import MMKeys
+ from logger import Logger
+@@ -185,7 +185,6 @@ class Listen(gtk.Window,Logger):
+         self.source_ui.save()
+         self.playlist_ui.playlist.save(close=True)
+         ListenDB.save()
+-        FileMonitor.close()
+         config.write()
+         gtk.main_quit()
+         print "Exit successful"
+--- origsrc/listen-0.6.5/src/widget/preference.py	2010-03-08 07:04:54.000000000 -0600
++++ src/listen-0.6.5/src/widget/preference.py	2011-01-24 23:57:06.329814900 -0600
+@@ -28,7 +28,6 @@ import stock
+ from config import config
+ from utils import get_main_window
+ from widget.misc import ScrolledWindow
+-from vfs import FileMonitor
+ from xdg_support import get_xdg_music_dir
+ 
+ 
+@@ -506,11 +505,6 @@ class PreferenceDialog(HelperConfigureDi
+         config.set("setting", "web_font", font.get_font_name())
+ 
+     def on_destroy(self, *args):
+-        if self.monitoring_update:
+-            FileMonitor.stop_monitoring()
+-            if config.getboolean("library", "watcher"):
+-                FileMonitor.start_monitoring()
+-        
+         self.osd.pref_hide_panel()
+         self.osd.hide_osd()
+         config.write()
